@@ -6,10 +6,10 @@
 
 ```bash
 docker build -t ganfan-admin .
-docker run -d --name ganfan-admin -p 8105:80 ganfan-admin
+docker run -d --name ganfan-admin -p 8105:8105 ganfan-admin
 ```
 
-- 容器内监听 **80**，宿主机映射 **8105**（即公司分配的端口）
+- 容器内监听 **8105**（公司分配端口，微信云托管服务监听端口同此值）
 - 纯静态站点，无需数据库、无需构建步骤
 - 前端调用微信云开发 HTTP 网关（`app.js` 中 `API_BASE`），服务端 CORS 已全放行，任意域名/端口托管均可
 

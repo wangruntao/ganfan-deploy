@@ -1,0 +1,37 @@
+name: deploy-admin
+# 推送 main 分支 → 构建 nginx 镜像 → 在本机重启容器（宿主端口 8105）
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}   # 支持手动触发
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 构建镜像
+        run: docker build -t ganfan-admin:latest .
+
+      - name: 重启容器（ganfan- 前缀，端口 8105）
+        run: |
+          docker rm -f ganfan-admin 2>/dev/null || true
+          docker run -d \
+            --name ganfan-admin \
+            --restart unless-stopped \
+            -p 8105:8105 \
+            ganfan-admin:latest
+
+      - name: 健康检查
+        run: |
+          sleep 3
+          CODE=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8105/ || echo 000)
+          echo "本机健康检查 HTTP 状态：$CODE"
+          if [ "$CODE" != "200" ]; then
+            docker logs --tail 20 ganfan-admin || true
+            exit 1
+          fi
+          echo "✅ 部署成功，容器内服务正常"

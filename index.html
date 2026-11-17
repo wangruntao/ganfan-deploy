@@ -1,0 +1,1164 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#FFFCF7">
+<title>今天吃什么 · 管理后台</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<!-- 图标集：统一 24 网格、1.7 描边，风格与小程序内的线性图标一致 -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-grid" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round">
+    <rect x="3.5" y="3.5" width="7" height="7" rx="2"/><rect x="13.5" y="3.5" width="7" height="7" rx="2"/>
+    <rect x="3.5" y="13.5" width="7" height="7" rx="2"/><rect x="13.5" y="13.5" width="7" height="7" rx="2"/>
+  </symbol>
+  <symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H10a2.5 2.5 0 0 1 2 1v14a2.5 2.5 0 0 0-2-1H4z"/>
+    <path d="M20 5.5A1.5 1.5 0 0 0 18.5 4H14a2.5 2.5 0 0 0-2 1v14a2.5 2.5 0 0 1 2-1h6z"/>
+  </symbol>
+  <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="9" cy="8" r="3.2"/><path d="M3.5 19.5c.6-3.2 2.8-5 5.5-5s4.9 1.8 5.5 5"/>
+    <path d="M16 5.5a3 3 0 0 1 0 6M17.5 14.8c2 .5 3.2 2.2 3.5 4.7"/>
+  </symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20.5 12.5c0 4-3.8 7-8.5 7a10 10 0 0 1-2.7-.36L4 21l1.3-3.9A6.6 6.6 0 0 1 3.5 12.5c0-4 3.8-7 8.5-7s8.5 3 8.5 7z"/>
+  </symbol>
+  <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+    <circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 20 20"/>
+  </symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round">
+    <path d="M12 5.5v13M5.5 12h13"/>
+  </symbol>
+  <symbol id="i-upload" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 16V4.5M8 8.5 12 4.5l4 4"/><path d="M4.5 15v3.5a1.5 1.5 0 0 0 1.5 1.5h12a1.5 1.5 0 0 0 1.5-1.5V15"/>
+  </symbol>
+  <symbol id="i-refresh" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20 12a8 8 0 1 1-2.5-5.8"/><path d="M20 4v4.5h-4.5"/>
+  </symbol>
+  <symbol id="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round">
+    <path d="M6 6l12 12M18 6 6 18"/>
+  </symbol>
+  <symbol id="i-logout" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M14.5 8V6a1.5 1.5 0 0 0-1.5-1.5H6A1.5 1.5 0 0 0 4.5 6v12A1.5 1.5 0 0 0 6 19.5h7a1.5 1.5 0 0 0 1.5-1.5v-2"/>
+    <path d="M10.5 12h9M16.5 8.5 20 12l-3.5 3.5"/>
+  </symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M9 5.5 15.5 12 9 18.5"/>
+  </symbol>
+  <symbol id="i-key" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="8" cy="8" r="4"/>
+    <path d="M10.9 10.9 20 20M17.6 17.6l1.5-1.5M14.8 14.8l1.5-1.5"/>
+  </symbol>
+  <symbol id="i-log" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M6 4.5h12M6 9.5h8M6 14.5h12M6 19.5h6"/>
+    <circle cx="18.5" cy="18.5" r="2.5"/>
+    <path d="M18.5 17.2v1.4l1 .7"/>
+  </symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 3.2 5 6v6c0 4.2 2.9 7.4 7 8.8 4.1-1.4 7-4.6 7-8.8V6l-7-2.8z"/>
+    <path d="M9.4 12.2 11.3 14l3.4-3.7"/>
+  </symbol>
+  <symbol id="i-edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 20h4l10-10a2.4 2.4 0 0 0-3.4-3.4L4.6 16.6 4 20z"/>
+  </symbol>
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M5 12.5 9.8 17 19 7"/>
+  </symbol>
+  <symbol id="i-utensils" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M7 3.5v6.5a2.5 2.5 0 0 0 5 0V3.5M9.5 12.5v8"/>
+    <path d="M16.5 3.5c1.6 1 2.5 2.6 2.5 4.5s-.9 3.3-2.5 4v9.5"/>
+  </symbol>
+  <symbol id="i-dice" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="3.5" y="3.5" width="17" height="17" rx="4.5"/>
+    <circle cx="8.6" cy="8.6" r="1.15" fill="currentColor" stroke="none"/>
+    <circle cx="15.4" cy="15.4" r="1.15" fill="currentColor" stroke="none"/>
+    <circle cx="12" cy="12" r="1.15" fill="currentColor" stroke="none"/>
+  </symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 3.5l1.9 5.1 5.1 1.9-5.1 1.9L12 17.5l-1.9-5.1L5 10.5l5.1-1.9z"/>
+    <path d="M18.5 16.5l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8z"/>
+  </symbol>
+  <symbol id="i-pie" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 3.5A8.5 8.5 0 1 0 20.5 12H12z"/>
+  </symbol>
+  <symbol id="i-image" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="3.5" y="4.5" width="17" height="15" rx="3"/><circle cx="9" cy="10" r="1.6"/>
+    <path d="M4.5 17l4.2-4.2a2 2 0 0 1 2.8 0l4.6 4.6M15.5 15l1.6-1.6a2 2 0 0 1 2.8 0l1 1"/>
+  </symbol>
+  <symbol id="i-inbox" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3.5 13.5h4l1.2 2.2h6.6l1.2-2.2h4"/>
+    <path d="M6 5.5h12l2.5 8v4a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 17.5v-4z"/>
+  </symbol>
+  <symbol id="i-help" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="8.5"/><path d="M9.7 9.4a2.4 2.4 0 1 1 3.4 2.2c-.75.36-1.1.9-1.1 1.7"/>
+    <circle cx="12" cy="16.4" r=".9" fill="currentColor" stroke="none"/>
+  </symbol>
+  <symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 3.8v10.4"/><path d="m7.9 10.3 4.1 4.1 4.1-4.1"/>
+    <path d="M4.6 17.2v1.3a2.1 2.1 0 0 0 2.1 2.1h10.6a2.1 2.1 0 0 0 2.1-2.1v-1.3"/>
+  </symbol>
+  <symbol id="i-broom" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M15.5 4.2 9.3 10.4"/><path d="M12.6 7.1l4.3 4.3"/>
+    <path d="M9.3 10.4c-2 2-3.2 4.7-3.6 7.9l-.2 1.5 1.5-.2c3.2-.4 5.9-1.6 7.9-3.6l1.6-1.6-5.6-5.6z"/>
+  </symbol>
+  <symbol id="i-ticket" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 9.2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v.9a2.4 2.4 0 0 0 0 4.8v.9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-.9a2.4 2.4 0 0 0 0-4.8z"/>
+    <path d="M12 9.6v1.5" stroke-dasharray="1 1.8"/><path d="M12 13.5v1.5" stroke-dasharray="1 1.8"/>
+  </symbol>
+</svg>
+
+<div class="shell">
+  <!-- ---------------- 侧栏 ---------------- -->
+  <aside class="side">
+    <div class="brand">
+      <div class="brand-logo"><img src="assets/mascot-chef.png" alt="今天吃什么"></div>
+      <div class="brand-text">
+        <div class="brand-name">今天吃什么</div>
+        <div class="brand-sub">管理后台</div>
+      </div>
+    </div>
+
+    <div class="nav-label">运营</div>
+    <nav class="nav" id="nav">
+      <button class="nav-item on" data-tab="stat" title="概览">
+        <svg class="nav-ico" aria-hidden="true"><use href="#i-grid"/></svg>
+        <span>概览</span>
+      </button>
+      <button class="nav-item" data-tab="foods" title="菜谱库">
+        <svg class="nav-ico" aria-hidden="true"><use href="#i-book"/></svg>
+        <span>菜谱库</span>
+      </button>
+      <button class="nav-item" data-tab="quota" title="用户与配额">
+        <svg class="nav-ico" aria-hidden="true"><use href="#i-users"/></svg>
+        <span>用户与配额</span>
+      </button>
+      <button class="nav-item" data-tab="member" title="会员">
+        <svg class="nav-ico" aria-hidden="true"><use href="#i-ticket"/></svg>
+        <span>会员</span>
+      </button>
+      <button class="nav-item" data-tab="feedback" title="反馈">
+        <svg class="nav-ico" aria-hidden="true"><use href="#i-chat"/></svg>
+        <span>反馈</span>
+        <span class="nav-badge" id="navFbBadge" hidden>0</span>
+      </button>
+      <button class="nav-item" data-tab="users" title="账号管理">
+        <svg class="nav-ico" aria-hidden="true"><use href="#i-shield"/></svg>
+        <span>账号管理</span>
+      </button>
+
+      <button class="nav-item" data-tab="security" title="安全面板">
+        <svg class="nav-ico" aria-hidden="true"><use href="#i-key"/></svg>
+        <span>安全面板</span>
+      </button>
+
+      <button class="nav-item" data-tab="log" title="操作日志">
+        <svg class="nav-ico" aria-hidden="true"><use href="#i-log"/></svg>
+        <span>操作日志</span>
+      </button>
+    </nav>
+
+    <div class="side-foot">
+      <div class="me">
+        <div class="me-av" id="avatar">管</div>
+        <div class="me-main">
+          <div class="me-name" id="whoami">未登录</div>
+          <div class="me-sub" id="adminCount">—</div>
+        </div>
+        <button class="me-btn" id="btnPwd" title="修改密码" aria-label="修改密码">
+          <svg width="15" height="15" aria-hidden="true"><use href="#i-key"/></svg>
+        </button>
+        <button class="me-btn me-btn-out" id="btnLogout" title="退出登录" aria-label="退出登录">
+          <svg width="15" height="15" aria-hidden="true"><use href="#i-logout"/></svg>
+        </button>
+      </div>
+      <div class="env-line">
+        <span class="env-dot"></span>
+        <span class="env-word" id="envTag">cloud1-…</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ---------------- 主区 ---------------- -->
+  <main class="main">
+    <header class="topbar">
+      <div class="crumb">
+        <b>今天吃什么</b>
+        <span class="crumb-sep">/</span>
+        <span id="pageCrumb">概览</span>
+      </div>
+      <div class="topbar-right">
+        <span class="pill"><span class="env-dot"></span>生产环境</span>
+        <button class="icon-btn" id="btnHelp" title="使用说明" aria-label="使用说明">
+          <svg width="16" height="16" aria-hidden="true"><use href="#i-help"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="content" id="content">
+      <div class="page">
+        <div class="page-head">
+          <div class="page-head-main">
+            <h1 class="page-title" id="pageTitle">概览</h1>
+            <p class="page-sub" id="pageSub">今天的运营数据与待办</p>
+          </div>
+          <div class="page-head-acts" id="pageActs"></div>
+        </div>
+
+        <!-- ============ 概览 ============ -->
+        <section id="tab-stat">
+          <div class="kpi-grid">
+            <div class="kpi">
+              <div class="kpi-top">
+                <div class="kpi-label">今日抽签</div>
+                <div class="kpi-ico"><svg aria-hidden="true"><use href="#i-dice"/></svg></div>
+              </div>
+              <div class="kpi-num" id="stDraw">—<small>次</small></div>
+              <div class="kpi-foot" id="stDrawFoot">较日均 —</div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-top">
+                <div class="kpi-label">今日 AI 生成</div>
+                <div class="kpi-ico p"><svg aria-hidden="true"><use href="#i-spark"/></svg></div>
+              </div>
+              <div class="kpi-num" id="stAi">—<small>次</small></div>
+              <div class="kpi-foot" id="stAiFoot">较日均 —</div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-top">
+                <div class="kpi-label">今日活跃用户</div>
+                <div class="kpi-ico g"><svg aria-hidden="true"><use href="#i-users"/></svg></div>
+              </div>
+              <div class="kpi-num" id="stActive">—<small>人</small></div>
+              <div class="kpi-foot" id="stActiveFoot">累计注册 —</div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-top">
+                <div class="kpi-label">公共菜谱</div>
+                <div class="kpi-ico"><svg aria-hidden="true"><use href="#i-utensils"/></svg></div>
+              </div>
+              <div class="kpi-num" id="stFoods">—<small>道</small></div>
+              <div class="kpi-foot" id="stFoodsFoot">已下架 —</div>
+            </div>
+          </div>
+
+          <div class="dash-grid">
+            <div class="card">
+              <div class="card-head">
+                <div>
+                  <div class="card-title">近 7 日使用趋势</div>
+                  <div class="card-sub">抽签与 AI 生成次数</div>
+                </div>
+                <div class="card-head-right">
+                  <div class="legend">
+                    <span><i style="background:#FF8A2B"></i>抽签</span>
+                    <span><i style="background:#37BE7B"></i>AI 生成</span>
+                  </div>
+                  <span class="chip-demo">示例数据</span>
+                </div>
+              </div>
+              <div class="card-body" style="padding-top:8px">
+                <div class="chart-box">
+                  <svg class="chart-svg" id="trendSvg" role="img" aria-label="近 7 日抽签与 AI 生成趋势图"></svg>
+                  <div class="chart-tip" id="trendTip"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-head">
+                <div>
+                  <div class="card-title">口味分布</div>
+                  <div class="card-sub">按现行菜谱库统计</div>
+                </div>
+                <div class="card-head-right">
+                  <div class="kpi-ico" style="width:28px;height:28px;border-radius:9px">
+                    <svg aria-hidden="true"><use href="#i-pie"/></svg>
+                  </div>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="donut-wrap">
+                  <svg class="donut-svg" id="donutSvg" role="img" aria-label="菜谱口味分布环形图"></svg>
+                  <div class="donut-legend" id="donutLegend"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="dash-grid-2" style="margin-bottom:16px">
+            <div class="card">
+              <div class="card-head">
+                <div>
+                  <div class="card-title">用户盘子</div>
+                  <div class="card-sub">注册、增长与会员概况</div>
+                </div>
+                <div class="card-head-right">
+                  <div class="kpi-ico" style="width:28px;height:28px;border-radius:9px">
+                    <svg aria-hidden="true"><use href="#i-users"/></svg>
+                  </div>
+                </div>
+              </div>
+              <div class="card-body" style="padding-top:6px">
+                <div class="ue-grid">
+                  <div class="ue-cell"><div class="ue-num" id="ueTotal">—</div><div class="ue-label">注册总数</div></div>
+                  <div class="ue-cell"><div class="ue-num" id="ueToday" style="color:#1E8F52">—</div><div class="ue-label">今日新增</div></div>
+                  <div class="ue-cell"><div class="ue-num" id="ueWeek" style="color:#1E8F52">—</div><div class="ue-label">本周新增</div></div>
+                  <div class="ue-cell"><div class="ue-num" id="ueActive">—</div><div class="ue-label">7 日活跃</div></div>
+                  <div class="ue-cell"><div class="ue-num" id="ueMembers" style="color:#C96A10">—</div><div class="ue-label">会员数</div></div>
+                </div>
+                <div class="ue-hint" id="ueHint">正在读取用户数据…</div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-head">
+                <div>
+                  <div class="card-title">AI 用量构成</div>
+                  <div class="card-sub">近 7 日：单餐 vs 周计划</div>
+                </div>
+                <div class="card-head-right">
+                  <div class="kpi-ico" style="width:28px;height:28px;border-radius:9px">
+                    <svg aria-hidden="true"><use href="#i-spark"/></svg>
+                  </div>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="mix-bar" id="aiMixBar"><i class="mix-meal" style="width:50%"></i><i class="mix-week" style="width:50%"></i></div>
+                <div class="mix-legend">
+                  <span><i style="background:#FF8A2B"></i>单餐生成</span>
+                  <span><i style="background:#37BE7B"></i>周计划生成</span>
+                </div>
+                <div class="ai-mix-text" id="aiMixText">正在读取…</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="margin-bottom:16px">
+            <div class="card-head">
+              <div>
+                <div class="card-title">抽签热门菜 Top10</div>
+                <div class="card-sub">近 7 日被抽中次数——补菜与下架决策的直接依据</div>
+              </div>
+              <div class="card-head-right">
+                <div class="kpi-ico" style="width:28px;height:28px;border-radius:9px">
+                  <svg aria-hidden="true"><use href="#i-dice"/></svg>
+                </div>
+              </div>
+            </div>
+            <div class="card-body" style="padding-top:4px">
+              <div id="topDishList"><div class="hint">正在读取…</div></div>
+            </div>
+          </div>
+
+          <div class="dash-grid-2">
+            <div class="card">
+              <div class="card-head">
+                <div class="card-title">待处理反馈</div>
+                <div class="card-head-right">
+                  <button class="link-btn" id="btnAllFb">全部反馈</button>
+                </div>
+              </div>
+              <div class="card-body" style="padding-top:6px">
+                <div class="mini-list" id="dashFb"></div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-head">
+                <div class="card-title">快捷操作</div>
+              </div>
+              <div class="card-body" style="padding-top:8px">
+                <div class="quick-list">
+                  <button class="quick" data-quick="new-food">
+                    <div class="quick-ico"><svg aria-hidden="true"><use href="#i-plus"/></svg></div>
+                    <div class="quick-main">
+                      <div class="quick-t">新增菜谱</div>
+                      <div class="quick-s">录入一道新菜，含图片与步骤</div>
+                    </div>
+                    <svg class="quick-arrow" width="16" height="16" aria-hidden="true"><use href="#i-arrow"/></svg>
+                  </button>
+                  <button class="quick" data-quick="batch">
+                    <div class="quick-ico"><svg aria-hidden="true"><use href="#i-upload"/></svg></div>
+                    <div class="quick-main">
+                      <div class="quick-t">批量导入</div>
+                      <div class="quick-s">从 Excel 直接粘贴，一次 50 条</div>
+                    </div>
+                    <svg class="quick-arrow" width="16" height="16" aria-hidden="true"><use href="#i-arrow"/></svg>
+                  </button>
+                  <button class="quick" data-quick="feedback">
+                    <div class="quick-ico"><svg aria-hidden="true"><use href="#i-chat"/></svg></div>
+                    <div class="quick-main">
+                      <div class="quick-t">处理反馈</div>
+                      <div class="quick-s">查看用户对 AI 结果的反馈</div>
+                    </div>
+                    <svg class="quick-arrow" width="16" height="16" aria-hidden="true"><use href="#i-arrow"/></svg>
+                  </button>
+                  <button class="quick" data-quick="gen-codes">
+                    <div class="quick-ico"><svg aria-hidden="true"><use href="#i-ticket"/></svg></div>
+                    <div class="quick-main">
+                      <div class="quick-t">发兑换码</div>
+                      <div class="quick-s">选套餐和数量，一键生成一批</div>
+                    </div>
+                    <svg class="quick-arrow" width="16" height="16" aria-hidden="true"><use href="#i-arrow"/></svg>
+                  </button>
+                  <button class="quick" data-quick="export">
+                    <div class="quick-ico"><svg aria-hidden="true"><use href="#i-download"/></svg></div>
+                    <div class="quick-main">
+                      <div class="quick-t">导出数据</div>
+                      <div class="quick-s">菜谱 / 用户 / 会员 / 兑换码全量 CSV</div>
+                    </div>
+                    <svg class="quick-arrow" width="16" height="16" aria-hidden="true"><use href="#i-arrow"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="dash-grid">
+            <div class="card">
+              <div class="card-head">
+                <div>
+                  <div class="card-title">图片存储</div>
+                  <div class="card-sub">菜谱封面在云存储的占用情况</div>
+                </div>
+                <div class="card-head-right">
+                  <button class="link-btn" id="btnMediaRefresh">刷新</button>
+                </div>
+              </div>
+              <div class="card-body" style="padding-top:6px">
+                <div class="media-stats">
+                  <div class="media-stat">
+                    <div class="ms-num" id="msUsed">—</div>
+                    <div class="ms-label">在用</div>
+                  </div>
+                  <div class="media-stat">
+                    <div class="ms-num" id="msOrphan">—</div>
+                    <div class="ms-label">未引用</div>
+                  </div>
+                  <div class="media-stat" id="msCleanableBox">
+                    <div class="ms-num" id="msCleanable">—</div>
+                    <div class="ms-label">可清理</div>
+                  </div>
+                  <div class="media-stat">
+                    <div class="ms-num" id="msSize">—</div>
+                    <div class="ms-label">可释放</div>
+                  </div>
+                </div>
+                <div class="media-foot">
+                  <div class="hint" id="msHint">正在读取图片台账…</div>
+                  <button class="btn btn-sm" id="btnMediaClean">
+                    <svg aria-hidden="true"><use href="#i-broom"/></svg>清理未使用
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-head">
+                <div>
+                  <div class="card-title">数据导出</div>
+                  <div class="card-sub">导出为 CSV，可直接用 Excel 打开</div>
+                </div>
+              </div>
+              <div class="card-body" style="padding-top:8px">
+                <div class="quick-list">
+                  <button class="quick" data-export="foods">
+                    <div class="quick-ico"><svg aria-hidden="true"><use href="#i-book"/></svg></div>
+                    <div class="quick-main">
+                      <div class="quick-t">菜谱清单</div>
+                      <div class="quick-s">全部公共菜品：编号、口味、成本、食材、步骤</div>
+                    </div>
+                    <svg class="quick-arrow" width="16" height="16" aria-hidden="true"><use href="#i-download"/></svg>
+                  </button>
+                  <button class="quick" data-export="logs">
+                    <div class="quick-ico"><svg aria-hidden="true"><use href="#i-log"/></svg></div>
+                    <div class="quick-main">
+                      <div class="quick-t">操作日志</div>
+                      <div class="quick-s">最近 500 条后台操作记录，便于交接与追溯</div>
+                    </div>
+                    <svg class="quick-arrow" width="16" height="16" aria-hidden="true"><use href="#i-download"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 菜谱库 ============ -->
+        <section id="tab-foods" hidden>
+          <div class="toolbar">
+            <div class="search-box">
+              <svg aria-hidden="true"><use href="#i-search"/></svg>
+              <input class="search" id="qFood" placeholder="搜索菜名 / 编号">
+            </div>
+            <div class="seg" id="segScope">
+              <button class="seg-btn on" data-scope="all">全部</button>
+              <button class="seg-btn" data-scope="online">已上架</button>
+              <button class="seg-btn" data-scope="hidden">已下架</button>
+            </div>
+            <div class="toolbar-right">
+              <button class="btn btn-ghost" id="btnReload" title="刷新">
+                <svg aria-hidden="true"><use href="#i-refresh"/></svg>刷新
+              </button>
+              <button class="btn" id="btnBatchImport">
+                <svg aria-hidden="true"><use href="#i-upload"/></svg>批量导入
+              </button>
+              <button class="btn btn-ghost" id="btnExportFoods" title="导出全部菜谱为 CSV">
+                <svg aria-hidden="true"><use href="#i-download"/></svg>导出
+              </button>
+              <button class="btn btn-primary" id="btnNewFood">
+                <svg aria-hidden="true"><use href="#i-plus"/></svg>新增菜谱
+              </button>
+            </div>
+          </div>
+
+          <!-- 勾选后出现的批量操作条：不勾选时完全隐藏，不占视觉噪音 -->
+          <div class="bulkbar" id="bulkBar" hidden>
+            <div class="bulkbar-info">已选 <b id="bulkCount">0</b> 项</div>
+            <div class="bulkbar-acts">
+              <button class="btn btn-sm" data-bulk="show">
+                <svg aria-hidden="true"><use href="#i-check"/></svg>批量上架
+              </button>
+              <button class="btn btn-sm" data-bulk="hide">
+                <svg aria-hidden="true"><use href="#i-close"/></svg>批量下架
+              </button>
+              <button class="btn btn-sm" data-bulk="edit">
+                <svg aria-hidden="true"><use href="#i-edit"/></svg>批量修改
+              </button>
+              <button class="link-btn muted" id="bulkClear">取消选择</button>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th style="width:40px"><input type="checkbox" class="ck" id="ckAll" aria-label="全选"></th>
+                    <th>菜品</th>
+                    <th style="width:88px">编号</th>
+                    <th style="width:86px">口味</th>
+                    <th style="width:84px">时长</th>
+                    <th style="width:76px">成本</th>
+                    <th style="width:96px">状态</th>
+                    <th style="width:132px">操作</th>
+                  </tr>
+                </thead>
+                <tbody id="foodRows"></tbody>
+              </table>
+            </div>
+            <div class="pager">
+              <span id="pagerInfo">—</span>
+              <div class="pager-right" id="pagerBtns">
+                <button class="pg-btn" id="pgPrev">上一页</button>
+                <button class="pg-btn" id="pgNext">下一页</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 用户与配额 ============ -->
+        <section id="tab-quota" hidden>
+          <div class="toolbar">
+            <div class="search-box">
+              <svg aria-hidden="true"><use href="#i-search"/></svg>
+              <input class="search" id="qUser" placeholder="输入 openid 或昵称查询">
+            </div>
+            <div class="toolbar-right">
+              <button class="btn btn-primary" id="btnUserSearch">
+                <svg aria-hidden="true"><use href="#i-search"/></svg>查询
+              </button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>用户</th><th style="width:240px">openid</th>
+                    <th style="width:110px">今日已用</th><th style="width:110px">每日上限</th>
+                    <th style="width:150px">操作</th>
+                  </tr>
+                </thead>
+                <tbody id="userRows">
+                  <tr><td colspan="5" class="empty">
+                    <div class="empty-ico"><svg aria-hidden="true"><use href="#i-users"/></svg></div>
+                    输入 openid 或昵称后查询
+                  </td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 账号管理 ============ -->
+        <section id="tab-users" hidden>
+          <div class="toolbar">
+            <div class="hint">账号只用于 PC 后台登录；可停用或删除，系统始终保留至少一个可用账号</div>
+            <div class="toolbar-right">
+              <button class="btn btn-ghost" id="btnReloadUsers" title="刷新">
+                <svg aria-hidden="true"><use href="#i-refresh"/></svg>刷新
+              </button>
+              <button class="btn btn-primary" id="btnNewUser">
+                <svg aria-hidden="true"><use href="#i-plus"/></svg>新增账号
+              </button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>账号</th>
+                    <th style="width:110px">状态</th>
+                    <th style="width:170px">最后登录</th>
+                    <th style="width:170px">创建时间</th>
+                    <th style="width:220px">操作</th>
+                  </tr>
+                </thead>
+                <tbody id="adminRows">
+                  <tr><td colspan="5" class="empty">
+                    <div class="empty-ico"><svg aria-hidden="true"><use href="#i-shield"/></svg></div>
+                    正在加载账号…
+                  </td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 会员 ============ -->
+        <section id="tab-member" hidden>
+          <div class="subnav" id="memberSubnav">
+            <button class="subnav-item on" data-sub="codes">兑换码</button>
+            <button class="subnav-item" data-sub="members">会员用户</button>
+          </div>
+
+          <div id="subMemberCodes">
+            <div class="toolbar">
+              <div class="hint">码在「我的」页兑换；只有未使用的码才能作废</div>
+              <div class="toolbar-right">
+                <select class="sel" id="codePlan" aria-label="套餐">
+                  <option value="d30">30 天</option>
+                  <option value="d90">90 天</option>
+                  <option value="forever">永久（活动）</option>
+                </select>
+                <input class="search" id="codeCount" type="number" min="1" max="100" value="10" style="width:82px" aria-label="生成数量">
+                <input class="search" id="codeNote" placeholder="备注（可选）" style="width:150px" aria-label="备注">
+                <button class="btn btn-primary" id="btnGenCodes">
+                  <svg aria-hidden="true"><use href="#i-plus"/></svg>生成
+                </button>
+              </div>
+            </div>
+            <div class="toolbar">
+              <select class="sel" id="codeStatus" aria-label="按状态筛选">
+                <option value="">全部状态</option>
+                <option value="unused">未使用</option>
+                <option value="used">已使用</option>
+                <option value="disabled">已作废</option>
+              </select>
+              <span class="pill" id="codeStat">—</span>
+              <div class="toolbar-right">
+                <button class="btn btn-ghost" id="btnCopyBatch" hidden>
+                  <svg aria-hidden="true"><use href="#i-download"/></svg>复制本批
+                </button>
+                <button class="btn btn-ghost" id="btnDisableCodes" hidden>
+                  <svg aria-hidden="true"><use href="#i-trash"/></svg>作废所选
+                </button>
+                <button class="btn btn-ghost" id="btnReloadCodes" title="刷新">
+                  <svg aria-hidden="true"><use href="#i-refresh"/></svg>刷新
+                </button>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <div class="table-scroll">
+                <table>
+                  <thead>
+                    <tr>
+                      <th style="width:40px"><input type="checkbox" id="codeAll" aria-label="全选本页"></th>
+                      <th style="width:200px">兑换码</th>
+                      <th style="width:100px">套餐</th>
+                      <th style="width:100px">状态</th>
+                      <th style="width:120px">批次</th>
+                      <th>使用人 / 备注</th>
+                      <th style="width:150px">创建时间</th>
+                    </tr>
+                  </thead>
+                  <tbody id="codeRows">
+                    <tr><td colspan="7" class="empty">
+                      <div class="empty-ico"><svg aria-hidden="true"><use href="#i-ticket"/></svg></div>
+                      正在加载兑换码…
+                    </td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div id="subMemberUsers" hidden>
+            <div class="toolbar">
+              <div class="search-box">
+                <svg aria-hidden="true"><use href="#i-search"/></svg>
+                <input class="search" id="qMember" placeholder="按 openid 或昵称搜索">
+              </div>
+              <div class="toolbar-right">
+                <select class="sel" id="grantPlan" aria-label="授予套餐">
+                  <option value="d30">30 天</option>
+                  <option value="d90">90 天</option>
+                  <option value="forever">永久</option>
+                </select>
+                <input class="search" id="grantOpenid" placeholder="输入 openid 手动授予" style="width:230px" aria-label="openid">
+                <button class="btn btn-primary" id="btnGrant">
+                  <svg aria-hidden="true"><use href="#i-key"/></svg>授予
+                </button>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <div class="table-scroll">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>用户</th>
+                      <th style="width:230px">openid</th>
+                      <th style="width:130px">状态</th>
+                      <th style="width:110px">剩余</th>
+                      <th style="width:150px">到期时间</th>
+                      <th style="width:120px">操作</th>
+                    </tr>
+                  </thead>
+                  <tbody id="memberRows">
+                    <tr><td colspan="6" class="empty">
+                      <div class="empty-ico"><svg aria-hidden="true"><use href="#i-users"/></svg></div>
+                      正在加载会员…
+                    </td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 操作日志 ============ -->
+        <section id="tab-log" hidden>
+          <div class="card" style="margin-bottom:16px">
+            <div class="card-head">
+              <div>
+                <div class="card-title">导出中心</div>
+                <div class="card-sub">全量 CSV 导出，Excel / WPS 直接打开</div>
+              </div>
+            </div>
+            <div class="card-body" style="padding-top:8px">
+              <div class="export-grid">
+                <button class="btn btn-ghost" data-export="foods"><svg aria-hidden="true"><use href="#i-download"/></svg>菜谱库</button>
+                <button class="btn btn-ghost" data-export="users"><svg aria-hidden="true"><use href="#i-download"/></svg>用户</button>
+                <button class="btn btn-ghost" data-export="members"><svg aria-hidden="true"><use href="#i-download"/></svg>会员</button>
+                <button class="btn btn-ghost" data-export="codes"><svg aria-hidden="true"><use href="#i-download"/></svg>兑换码</button>
+                <button class="btn btn-ghost" data-export="logs"><svg aria-hidden="true"><use href="#i-download"/></svg>操作日志（最近 500 条）</button>
+              </div>
+              <div class="export-hint">兑换码导出包含明文码，请勿外传；操作日志上限 500 条（服务端保留 90 天）。</div>
+            </div>
+          </div>
+          <div class="toolbar">
+            <select class="sel" id="logAction" aria-label="按操作类型筛选">
+              <option value="all">全部操作</option>
+              <option value="login">登录</option>
+              <option value="foodSave">新增/编辑菜谱</option>
+              <option value="foodHidden">上下架</option>
+              <option value="foodBatchOps">批量操作</option>
+              <option value="foodBatch">批量导入</option>
+              <option value="upload">图片上传</option>
+              <option value="quotaAdjust">配额调整</option>
+              <option value="feedbackHandle">反馈处理</option>
+              <option value="adminUserAdd">新增账号</option>
+              <option value="adminUserUpdate">启停账号</option>
+              <option value="adminUserResetPwd">重置密码</option>
+              <option value="adminUserDelete">删除账号</option>
+              <option value="loginUnlock">解除登录限制</option>
+              <option value="mediaClean">清理图片</option>
+              <option value="changePwd">修改密码</option>
+              <option value="migrate">数据迁移</option>
+            </select>
+            <div class="search-box">
+              <svg aria-hidden="true"><use href="#i-search"/></svg>
+              <input class="search" id="qLog" placeholder="搜索操作人 / 对象 / IP">
+            </div>
+            <div class="toolbar-right">
+              <span class="pill" id="logKeep">保留 90 天</span>
+              <button class="btn btn-ghost" id="btnExportLogs" title="导出最近 500 条为 CSV">
+                <svg aria-hidden="true"><use href="#i-download"/></svg>导出
+              </button>
+              <button class="btn btn-ghost" id="btnReloadLog" title="刷新">
+                <svg aria-hidden="true"><use href="#i-refresh"/></svg>刷新
+              </button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th style="width:160px">时间</th>
+                    <th style="width:150px">操作人</th>
+                    <th style="width:140px">操作</th>
+                    <th>对象 / 说明</th>
+                    <th style="width:104px">结果</th>
+                    <th style="width:130px">来源 IP</th>
+                  </tr>
+                </thead>
+                <tbody id="logRows">
+                  <tr><td colspan="6" class="empty">
+                    <div class="empty-ico"><svg aria-hidden="true"><use href="#i-log"/></svg></div>
+                    正在加载操作记录…
+                  </td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="pager">
+              <span id="logInfo">—</span>
+              <div class="pager-right" id="logPager"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 安全面板 ============ -->
+        <section id="tab-security" hidden>
+          <div class="kpi-grid kpi-3">
+            <div class="kpi">
+              <div class="kpi-top">
+                <div class="kpi-label">今日登录失败</div>
+                <div class="kpi-ico"><svg aria-hidden="true"><use href="#i-key"/></svg></div>
+              </div>
+              <div class="kpi-num" id="secFails">—<small>次</small></div>
+              <div class="kpi-foot"><span>含网页后台与所有登录尝试</span></div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-top">
+                <div class="kpi-label">当前封锁中</div>
+                <div class="kpi-ico p"><svg aria-hidden="true"><use href="#i-shield"/></svg></div>
+              </div>
+              <div class="kpi-num" id="secBlocked">—<small>个</small></div>
+              <div class="kpi-foot"><span>IP 或账号+IP 被限流封锁</span></div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-top">
+                <div class="kpi-label">节流记录总数</div>
+                <div class="kpi-ico g"><svg aria-hidden="true"><use href="#i-log"/></svg></div>
+              </div>
+              <div class="kpi-num" id="secThrottle">—<small>条</small></div>
+              <div class="kpi-foot"><span>历史上有过失败登录的 IP / 账号</span></div>
+            </div>
+          </div>
+
+          <div class="dash-grid-2" style="margin-bottom:16px">
+            <div class="card">
+              <div class="card-head">
+                <div class="card-title">封锁中的 IP / 账号</div>
+              </div>
+              <div class="table-wrap" style="box-shadow:none;border:none">
+                <div class="table-scroll">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th style="width:90px">类型</th>
+                        <th>对象</th>
+                        <th style="width:110px">失败次数</th>
+                        <th style="width:110px">封锁史</th>
+                        <th style="width:150px">解封时间</th>
+                      </tr>
+                    </thead>
+                    <tbody id="secBlockedRows">
+                      <tr><td colspan="5" class="empty">正在加载…</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-head">
+                <div class="card-title">最近失败操作</div>
+                <div class="card-head-right"><span class="pill">最近 10 条</span></div>
+              </div>
+              <div class="table-wrap" style="box-shadow:none;border:none">
+                <div class="table-scroll">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th style="width:90px">时间</th>
+                        <th style="width:90px">操作人</th>
+                        <th style="width:110px">操作</th>
+                        <th style="width:110px">错误码</th>
+                        <th style="width:70px">通道</th>
+                        <th>IP</th>
+                      </tr>
+                    </thead>
+                    <tbody id="secFailRows">
+                      <tr><td colspan="6" class="empty">正在加载…</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="hint">解封账号请到「账号管理」使用解除限制功能；封锁到期自动放行，无需手动处理。</div>
+        </section>
+
+        <!-- ============ 反馈 ============ -->
+        <section id="tab-feedback" hidden>
+          <div class="toolbar">
+            <div class="seg" id="segFb">
+              <button class="seg-btn on" data-fbscope="open">待处理</button>
+              <button class="seg-btn" data-fbscope="all">全部</button>
+            </div>
+            <div class="toolbar-right">
+              <button class="btn btn-ghost" id="btnReloadFb">
+                <svg aria-hidden="true"><use href="#i-refresh"/></svg>刷新
+              </button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th style="width:150px">时间</th><th style="width:170px">用户</th>
+                    <th>原因</th><th style="width:104px">状态</th><th style="width:120px">操作</th>
+                  </tr>
+                </thead>
+                <tbody id="fbRows"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ---------------- 编辑弹层 ---------------- -->
+<div class="mask" id="editMask" hidden>
+  <div class="modal modal-wide" role="dialog" aria-modal="true" aria-labelledby="editTitle">
+    <div class="modal-head">
+      <div>
+        <h2 id="editTitle">编辑菜谱</h2>
+        <div class="modal-sub">保存后立即生效，参与抽签与 AI 参考</div>
+      </div>
+      <button class="modal-x" id="editClose" aria-label="关闭">
+        <svg width="15" height="15" aria-hidden="true"><use href="#i-close"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label for="fName">菜品名称</label>
+        <input id="fName" maxlength="20" placeholder="例如 鱼香肉丝">
+      </div>
+      <div class="grid3">
+        <div class="field"><label for="fTaste">口味</label>
+          <select id="fTaste"><option>家常</option><option>鲜辣</option><option>清淡</option><option>酸甜</option><option>咸香</option></select>
+        </div>
+        <div class="field"><label for="fNo">编号</label><input id="fNo" disabled placeholder="保存后自动生成"></div>
+        <div class="field"><label for="fTime">时长（分钟）</label><input id="fTime" type="number" min="5" max="180"></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label for="fBudget">成本（元）</label><input id="fBudget" type="number" min="1" max="500"></div>
+        <div class="field"><label for="fDesc">一句话描述</label><input id="fDesc" maxlength="60" placeholder="酸甜下饭，十分钟出锅"></div>
+      </div>
+      <div class="field"><label for="fIng">食材清单</label><textarea id="fIng" style="min-height:64px" placeholder="顿号或逗号分隔，例如：鸡胸肉、花生、黄瓜"></textarea></div>
+      <div class="field"><label for="fSteps">做法步骤</label><textarea id="fSteps" placeholder="1. 备料&#10;2. 热锅下油&#10;3. 翻炒调味出锅"></textarea></div>
+      <div class="field">
+        <label>菜品图片</label>
+        <div class="img-field">
+          <img id="fImg" class="img-prev" alt="菜品预览">
+          <div class="img-side">
+            <button class="btn" id="btnPickImg">
+              <svg aria-hidden="true"><use href="#i-image"/></svg>选择图片
+            </button>
+            <button class="btn btn-ghost" id="btnClearImg" hidden>恢复默认图</button>
+            <div class="hint" style="margin-top:8px">建议 3:2，宽度 ≥ 600px；保存时上传到云存储</div>
+          </div>
+        </div>
+        <input type="file" id="fileImg" accept="image/jpeg,image/png,image/webp" hidden>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" id="editCancel">取消</button>
+      <button class="btn btn-primary" id="editSave">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- ---------------- 批量导入弹层 ---------------- -->
+<div class="mask" id="batchMask" hidden>
+  <div class="modal modal-wide" role="dialog" aria-modal="true" aria-labelledby="batchTitle">
+    <div class="modal-head">
+      <div>
+        <h2 id="batchTitle">批量导入菜谱</h2>
+        <div class="modal-sub">粘贴后即时解析，确认前可反复修改</div>
+      </div>
+      <button class="modal-x" id="batchClose" aria-label="关闭">
+        <svg width="15" height="15" aria-hidden="true"><use href="#i-close"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="hint" style="margin-bottom:12px">
+        从 Excel 直接复制粘贴。第一行写列名即可自动识别（顺序随意、列可缺）；不带表头则按
+        <code>菜名 | 口味 | 时长 | 成本 | 食材 | 步骤</code> 顺序。单次上限 50 条，同名自动跳过。
+      </div>
+      <div class="field">
+        <textarea class="batch-area" id="batchText" spellcheck="false" placeholder="菜名|口味|时长|成本|食材|步骤
+宫保鸡丁|鲜辣|25|28|鸡胸肉、花生、黄瓜|切丁→腌制→爆炒
+番茄鸡蛋面|家常|15|8|番茄、鸡蛋、面条|炒蛋→煮面→合炒"></textarea>
+      </div>
+      <div class="batch-sum" id="batchSum">识别到 <b>0</b> 道菜</div>
+      <div class="preview-head">
+        <span>菜名</span><span>口味</span><span>时长</span><span>成本</span><span>食材</span>
+      </div>
+      <div class="preview-list" id="batchPreview"></div>
+    </div>
+    <div class="modal-foot">
+      <div class="hint" id="batchTip">同名菜会自动跳过，不会覆盖已有内容</div>
+      <button class="btn" id="batchCancel">取消</button>
+      <button class="btn btn-primary" id="batchSubmit">确认导入</button>
+    </div>
+  </div>
+</div>
+
+<!-- ---------------- 修改密码 ---------------- -->
+<div class="mask" id="pwdMask" hidden>
+  <div class="modal modal-sm" role="dialog" aria-modal="true" aria-labelledby="pwdTitle">
+    <div class="modal-head">
+      <div>
+        <h2 id="pwdTitle">修改密码</h2>
+        <div class="modal-sub">修改后请用新密码登录，当前会话不受影响</div>
+      </div>
+      <button class="modal-x" id="pwdClose" aria-label="关闭">
+        <svg width="15" height="15" aria-hidden="true"><use href="#i-close"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label for="pwdOld">当前密码</label>
+        <input id="pwdOld" type="password" autocomplete="current-password" placeholder="请输入当前登录密码">
+      </div>
+      <div class="field">
+        <label for="pwdNew">新密码</label>
+        <input id="pwdNew" type="password" autocomplete="new-password" maxlength="64" placeholder="至少 8 位，含字母和数字">
+        <div class="hint" id="pwdTip">密码至少 8 位，需同时包含字母和数字（最长 64 位）</div>
+      </div>
+      <div class="field">
+        <label for="pwdNew2">确认新密码</label>
+        <input id="pwdNew2" type="password" autocomplete="new-password" maxlength="64" placeholder="再次输入新密码">
+      </div>
+      <div class="form-err" id="pwdErr"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" id="pwdCancel">取消</button>
+      <button class="btn btn-primary" id="pwdSubmit">确认修改</button>
+    </div>
+  </div>
+</div>
+
+<!-- ---------------- 账号弹层（新增 / 重置密码共用） ---------------- -->
+<div class="mask" id="accMask" hidden>
+  <div class="modal modal-sm" role="dialog" aria-modal="true" aria-labelledby="accTitle">
+    <div class="modal-head">
+      <div>
+        <h2 id="accTitle">新增账号</h2>
+        <div class="modal-sub" id="accSub">新账号可立即用账号密码登录后台</div>
+      </div>
+      <button class="modal-x" id="accClose" aria-label="关闭">
+        <svg width="15" height="15" aria-hidden="true"><use href="#i-close"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="field" id="accNameField">
+        <label for="accName">账号</label>
+        <input id="accName" maxlength="20" autocomplete="off" placeholder="3~20 位字母、数字或下划线">
+      </div>
+      <div class="field">
+        <label for="accPwd">密码</label>
+        <input id="accPwd" type="password" maxlength="64" autocomplete="new-password" placeholder="至少 8 位，含字母和数字">
+        <div class="hint" id="accPwdTip">密码至少 8 位，需同时包含字母和数字（最长 64 位）</div>
+      </div>
+      <div class="field">
+        <label for="accPwd2">确认密码</label>
+        <input id="accPwd2" type="password" maxlength="64" autocomplete="new-password" placeholder="再次输入密码">
+      </div>
+      <div class="form-err" id="accErr"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" id="accCancel">取消</button>
+      <button class="btn btn-primary" id="accSubmit">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- ---------------- 批量修改弹层 ---------------- -->
+<div class="mask" id="bulkMask" hidden>
+  <div class="modal modal-sm" role="dialog" aria-modal="true" aria-labelledby="bulkTitle">
+    <div class="modal-head">
+      <div>
+        <h2 id="bulkTitle">批量修改</h2>
+        <div class="modal-sub" id="bulkSub">已选 0 项</div>
+      </div>
+      <button class="modal-x" id="bulkClose" aria-label="关闭">
+        <svg width="15" height="15" aria-hidden="true"><use href="#i-close"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label for="bulkBudget">成本（元）</label>
+        <input id="bulkBudget" type="number" min="0" max="9999" placeholder="留空表示不修改">
+      </div>
+      <div class="field">
+        <label for="bulkTaste">口味</label>
+        <select id="bulkTaste">
+          <option value="">不修改</option>
+          <option>家常</option><option>鲜辣</option><option>清淡</option><option>酸甜</option><option>咸香</option>
+        </select>
+      </div>
+      <div class="hint">两项都填时按「成本 → 口味」依次写入；只改填写的项，不动的字段保持原样</div>
+      <div class="form-err" id="bulkErr"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" id="bulkCancel">取消</button>
+      <button class="btn btn-primary" id="bulkSubmit">应用到选中项</button>
+    </div>
+  </div>
+</div>
+
+<!-- ---------------- 登录 ---------------- -->
+<div class="login-wrap" id="loginWrap" hidden>
+  <div class="login-brand">
+    <span class="decor d1"></span><span class="decor d2"></span><span class="decor d3"></span>
+    <div class="login-hero">
+      <img class="login-mascot" src="assets/mascot-chef.png" alt="今天吃什么 吉祥物">
+      <h1>今天吃什么</h1>
+      <div class="login-tag">让每一顿饭都不纠结</div>
+    </div>
+  </div>
+  <div class="login-panel">
+    <div class="login-card">
+      <div class="login-kicker">ADMIN CONSOLE</div>
+      <h2>管理后台登录</h2>
+      <p>仅限管理员账号，与小程序用户账号不同。</p>
+      <div class="field"><label for="lgUser">账号</label><input id="lgUser" autocomplete="username" placeholder="管理员账号"></div>
+      <div class="field"><label for="lgPass">密码</label><input id="lgPass" type="password" autocomplete="current-password" placeholder="登录密码"></div>
+      <label class="login-remember"><input type="checkbox" id="lgRemember"> <span>记住我（7 天免登录）</span></label>
+      <button class="btn btn-primary" id="lgSubmit">登录</button>
+      <div class="login-err" id="lgErr"></div>
+      <div class="login-foot">账号由管理员在后台创建；忘记密码请联系管理员重置</div>
+    </div>
+  </div>
+</div>
+
+<!-- ---------------- Toast ---------------- -->
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="app.js"></script>
+</body>
+</html>

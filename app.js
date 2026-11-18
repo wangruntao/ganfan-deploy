@@ -180,8 +180,10 @@ const api = {
   adminUserAdd(username, password) {
     return this.call('adminUserAdd', { username: username, password: password });
   },
-  adminUserUpdate(id, disabled) {
-    return this.call('adminUserUpdate', { id: id, disabled: !!disabled });
+  adminUserUpdate(id, disabled, avatar) {
+    const data = { id: id, disabled: !!disabled };
+    if (avatar !== undefined) data.avatar = avatar;
+    return this.call('adminUserUpdate', data);
   },
   adminUserResetPwd(id, newPassword) {
     return this.call('adminUserResetPwd', { id: id, newPassword: newPassword });
@@ -1055,15 +1057,19 @@ async function loadAdminUsers() {
     const unlock = u.recentFails > 0
       ? `<button class="link-btn muted" data-act="unlock" data-name="${esc(u.username)}">解除限制</button>`
       : '';
-    const acts = u.isSelf
+    const acts = (u.isSelf
       ? '<span class="link-btn muted" style="cursor:default">当前账号</span>'
       : `<button class="link-btn muted" data-act="toggle" data-id="${u.id}" data-name="${esc(u.username)}" data-disabled="${u.disabled ? '1' : ''}">${u.disabled ? '启用' : '停用'}</button>
-         <button class="link-btn muted" data-act="del" data-id="${u.id}" data-name="${esc(u.username)}">删除</button>`;
+         <button class="link-btn muted" data-act="del" data-id="${u.id}" data-name="${esc(u.username)}">删除</button>`)
+      + `<button class="link-btn muted" data-act="avatar" data-id="${u.id}" data-name="${esc(u.username)}">换头像</button>`;
+    const avInner = u.avatar
+      ? `<img class="mini-av-img" src="${esc(u.avatar)}" alt="">`
+      : esc(String(u.username || '?').slice(0, 1).toUpperCase());
     return `
       <tr>
         <td>
           <div class="cell-food" style="min-width:150px">
-            <div class="mini-av">${esc(String(u.username || '?').slice(0, 1).toUpperCase())}</div>
+            <div class="mini-av">${avInner}</div>
             <div style="min-width:0">
               <div class="food-name">${esc(u.username)}</div>
               <div class="food-desc">${pwd}</div>
@@ -1195,6 +1201,61 @@ async function deleteAdminUser(id, name) {
   } catch (e) {
     toast(e.message, true);
   }
+}
+
+/* ---------------- 账号头像（2026-11-18） ---------------- */
+
+/** 本地文件 → 128×128 方形 JPEG dataURL（canvas 居中裁剪，控制在服务端 80KB 限制内） */
+function fileToAvatarDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    if (!file || !/^image\//.test(file.type)) return reject(new Error('请选择图片文件'));
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      try {
+        const size = 128;
+        const c = document.createElement('canvas');
+        c.width = size;
+        c.height = size;
+        const ctx = c.getContext('2d');
+        const s = Math.min(img.width, img.height);
+        ctx.drawImage(img, (img.width - s) / 2, (img.height - s) / 2, s, s, 0, 0, size, size);
+        resolve(c.toDataURL('image/jpeg', 0.85));
+      } catch (err) {
+        reject(err);
+      } finally {
+        URL.revokeObjectURL(url);
+      }
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('图片读取失败')); };
+    img.src = url;
+  });
+}
+
+/** 换头像：打开文件选择 → 本地裁剪预览确认 → 存到账号记录 */
+function changeAvatar(id, name) {
+  const input = $('avFile');
+  input.value = '';
+  input.onchange = async () => {
+    const file = input.files && input.files[0];
+    if (!file) return;
+    let dataUrl;
+    try {
+      dataUrl = await fileToAvatarDataUrl(file);
+    } catch (err) {
+      toast(err.message || '图片处理失败', true);
+      return;
+    }
+    if (!confirm('将这张图设为「' + name + '」的头像？')) return;
+    try {
+      await api.adminUserUpdate(id, undefined, dataUrl);
+      toast('头像已更新');
+      loadAdminUsers();
+    } catch (err) {
+      toast(err.message || '头像更新失败', true);
+    }
+  };
+  input.click();
 }
 
 /** 解除登录节流：清掉该账号的失败记录，顺带清本机 IP 的总计数 */
@@ -1829,6 +1890,7 @@ function bind() {
     if (d.act === 'toggle') toggleAdminUser(d.id, d.name, d.disabled === '1');
     if (d.act === 'del') deleteAdminUser(d.id, d.name);
     if (d.act === 'unlock') unlockLogin(d.name);
+    if (d.act === 'avatar') changeAvatar(d.id, d.name);
   });
 
   $('foodRows').addEventListener('click', async (e) => {

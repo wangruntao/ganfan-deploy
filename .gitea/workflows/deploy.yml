@@ -25,13 +25,27 @@ jobs:
             -p 8105:8105 \
             ganfan-admin:latest
 
-      - name: 健康检查
+      - name: 健康检查（5 次重试，每次间隔 3 秒）
         run: |
-          sleep 3
-          CODE=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8105/ || echo 000)
-          echo "本机健康检查 HTTP 状态：$CODE"
-          if [ "$CODE" != "200" ]; then
-            docker logs --tail 20 ganfan-admin || true
-            exit 1
-          fi
-          echo "✅ 部署成功，容器内服务正常"
+          for i in 1 2 3 4 5; do
+            sleep 3
+            CODE=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8105/ || true)
+            echo "第 $i 次探测 HTTP 状态：$CODE"
+            if [ "$CODE" = "200" ]; then
+              echo "✅ 部署成功，容器内服务正常"
+              exit 0
+            fi
+          done
+          exit 1
+
+      - name: 失败诊断（容器状态/端口占用/完整日志）
+        if: failure()
+        run: |
+          echo "===== docker ps 容器状态 ====="
+          docker ps -a --filter name=ganfan --no-trunc || true
+          echo "===== 8105 端口占用 ====="
+          (ss -ltnp | grep 8105) || (netstat -ltnp 2>/dev/null | grep 8105) || echo "无进程监听 8105"
+          echo "===== 容器完整日志（最近 60 行）====="
+          docker logs --tail 60 ganfan-admin 2>&1 || true
+          echo "===== docker 最近事件 ====="
+          docker events --since 5m --until 1s --filter container=ganfan-admin 2>/dev/null | tail -20 || true

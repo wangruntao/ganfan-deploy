@@ -1075,6 +1075,14 @@
       </button>
     </div>
     <div class="modal-body">
+      <!-- 头像（仅新增账号时显示）：点圆块选图，本地裁剪预览，保存时随账号一起创建 -->
+      <div class="field acc-avatar-field" id="accAvatarField">
+        <div class="acc-avatar" id="accAvatar" role="button" tabindex="0" aria-label="选择头像" title="点击选择头像">
+          <img id="accAvatarImg" alt="" hidden>
+          <span id="accAvatarPlaceholder">＋</span>
+        </div>
+        <div class="acc-avatar-tip" id="accAvatarTip">点头像块可选头像（可跳过）</div>
+      </div>
       <div class="field" id="accNameField">
         <label for="accName">账号</label>
         <input id="accName" maxlength="20" autocomplete="off" placeholder="3~20 位字母、数字或下划线">

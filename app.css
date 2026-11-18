@@ -721,6 +721,27 @@ h1, h2, h3, p { margin: 0; }
   object-fit: cover;
   display: block;
 }
+/* 新增账号弹窗里的头像选择块（2026-11-18） */
+.acc-avatar-field { display: flex; align-items: center; gap: 12px; }
+.acc-avatar {
+  width: 52px;
+  height: 52px;
+  flex: none;
+  border-radius: 50%;
+  border: 1.5px dashed var(--orange, #FF8A2B);
+  background: var(--orange-soft, #FFF1E1);
+  color: var(--orange-deep, #FF6A18);
+  display: grid;
+  place-items: center;
+  font-size: 22px;
+  font-weight: 600;
+  cursor: pointer;
+  overflow: hidden;
+  transition: border-color 150ms ease, background 150ms ease;
+}
+.acc-avatar:hover { border-color: var(--orange-deep, #FF6A18); background: #FFE9D4; }
+.acc-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.acc-avatar-tip { font-size: 11.5px; color: var(--muted, #A99A8C); }
 .mini-main { flex: 1; min-width: 0; }
 .mini-text {
   font-size: 13px;

@@ -177,8 +177,10 @@ const api = {
   adminUsers() {
     return this.call('adminUsers');
   },
-  adminUserAdd(username, password) {
-    return this.call('adminUserAdd', { username: username, password: password });
+  adminUserAdd(username, password, avatar) {
+    const data = { username: username, password: password };
+    if (avatar !== undefined && avatar !== '') data.avatar = avatar;
+    return this.call('adminUserAdd', data);
   },
   adminUserUpdate(id, disabled, avatar) {
     const data = { id: id, disabled: !!disabled };
@@ -1113,10 +1115,15 @@ function resetAccFields() {
 function openAccAdd() {
   state.accMode = 'add';
   state.accTarget = null;
+  state.accAvatar = '';
   $('accTitle').textContent = '新增账号';
   $('accSub').textContent = '新账号可立即用账号密码登录后台';
   $('accNameField').hidden = false;
   $('accName').value = '';
+  $('accAvatarField').hidden = false;
+  $('accAvatarImg').hidden = true;
+  $('accAvatarImg').removeAttribute('src');
+  $('accAvatarPlaceholder').hidden = false;
   $('accSubmit').textContent = '保存';
   resetAccFields();
   $('accMask').hidden = false;
@@ -1129,6 +1136,7 @@ function openAccReset(id, name) {
   $('accTitle').textContent = '重置密码';
   $('accSub').textContent = '为「' + name + '」设置新密码，原密码立即失效';
   $('accNameField').hidden = true;
+  $('accAvatarField').hidden = true;
   $('accSubmit').textContent = '重置密码';
   resetAccFields();
   $('accMask').hidden = false;
@@ -1164,7 +1172,7 @@ async function doAccSubmit() {
 
   try {
     if (isAdd) {
-      await api.adminUserAdd(name, pwd);
+      await api.adminUserAdd(name, pwd, state.accAvatar || undefined);
       toast('账号已创建：' + name);
     } else {
       await api.adminUserResetPwd(state.accTarget.id, pwd);
@@ -1881,6 +1889,27 @@ function bind() {
   $('accPwd').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('accPwd2').focus(); });
   $('accPwd2').addEventListener('keydown', (e) => { if (e.key === 'Enter') doAccSubmit(); });
   $('accMask').addEventListener('click', (e) => { if (e.target === $('accMask')) closeAcc(); });
+
+  /* 新增账号弹窗：点头像圆块选图（复用全局 #avFile，每次点击重挂 onchange 不冲突） */
+  $('accAvatar').addEventListener('click', () => {
+    const input = $('avFile');
+    input.value = '';
+    input.onchange = async () => {
+      const file = input.files && input.files[0];
+      if (!file) return;
+      try {
+        const dataUrl = await fileToAvatarDataUrl(file);
+        state.accAvatar = dataUrl;
+        $('accAvatarImg').src = dataUrl;
+        $('accAvatarImg').hidden = false;
+        $('accAvatarPlaceholder').hidden = true;
+        $('accAvatarTip').textContent = '已选择头像，保存后生效';
+      } catch (err) {
+        toast(err.message || '图片处理失败', true);
+      }
+    };
+    input.click();
+  });
 
   $('adminRows').addEventListener('click', (e) => {
     const btn = e.target.closest('button[data-act]');

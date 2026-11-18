@@ -55,7 +55,7 @@ const TASTE_COLORS = {
  *   前端只负责保存 token。
  *
  * token 存 localStorage：刷新页面不掉登录；退出登录即清除。
- * 有效期由服务端决定（12 小时 / 记住我 7 天），过期后任何请求返回
+ * 有效期由服务端决定（7 天），过期后任何请求返回
  * UNAUTHORIZED，这里统一清 token 并弹回登录页。
  */
 const API_BASE = 'https://today-eat-d1g9okcsi57960feb-1529065185.ap-shanghai.app.tcloudbase.com/api';
@@ -2230,7 +2230,7 @@ async function doLogin() {
   $('lgErr').textContent = '';
 
   try {
-    await api.login(u, p, $('lgRemember') && $('lgRemember').checked);
+    await api.login(u, p);
     $('loginWrap').hidden = true;
     await boot();
   } catch (e) {
@@ -2247,7 +2247,7 @@ function applyIdentity(me) {
   state.me = me;
   $('whoami').textContent = isWeb ? (me.username || '管理员') : '管理员';
   $('adminCount').textContent = isWeb
-    ? '账号密码登录 · 会话 12 小时'
+    ? '账号密码登录 · 会话 7 天'
     : `微信身份 · ${(me.openid || '').slice(0, 8)}…（共 ${me.adminCount} 人）`;
   $('avatar').textContent = isWeb ? String(me.username || '管').slice(0, 1).toUpperCase() : '管';
   $('envTag').textContent = ENV_ID;

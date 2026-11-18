@@ -259,7 +259,7 @@ const api = {
    ② https 外链直接用
    ③ 包内文件名 → 静态托管下的 assets/dishes/
    ④ 其它（cloud:// 换链接失败）→ 本地占位图，保证不出现破图 */
-const PLACEHOLDER_IMG = 'assets/dishes/dish-01.jpg';
+const PLACEHOLDER_IMG = 'assets/dishes/dish-default.jpg';
 
 function imgSrc(f) {
   if (!f) return PLACEHOLDER_IMG;

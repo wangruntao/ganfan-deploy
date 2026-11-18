@@ -1063,7 +1063,8 @@ async function loadAdminUsers() {
       ? '<span class="link-btn muted" style="cursor:default">当前账号</span>'
       : `<button class="link-btn muted" data-act="toggle" data-id="${u.id}" data-name="${esc(u.username)}" data-disabled="${u.disabled ? '1' : ''}">${u.disabled ? '启用' : '停用'}</button>
          <button class="link-btn muted" data-act="del" data-id="${u.id}" data-name="${esc(u.username)}">删除</button>`)
-      + `<button class="link-btn muted" data-act="avatar" data-id="${u.id}" data-name="${esc(u.username)}">换头像</button>`;
+      + `<button class="link-btn muted" data-act="avatar" data-id="${u.id}" data-name="${esc(u.username)}">换头像</button>`
+      + (u.avatar ? `<button class="link-btn muted" data-act="clearAvatar" data-id="${u.id}" data-name="${esc(u.username)}">清头像</button>` : '');
     const avInner = u.avatar
       ? `<img class="mini-av-img" src="${esc(u.avatar)}" alt="">`
       : esc(String(u.username || '?').slice(0, 1).toUpperCase());
@@ -1264,6 +1265,18 @@ function changeAvatar(id, name) {
     }
   };
   input.click();
+}
+
+/** 清除头像：恢复首字母占位（接口传空串即清除） */
+async function clearAvatar(id, name) {
+  if (!confirm('清除「' + name + '」的头像，恢复字母占位？')) return;
+  try {
+    await api.adminUserUpdate(id, undefined, '');
+    toast('已清除「' + name + '」的头像');
+    loadAdminUsers();
+  } catch (e) {
+    toast(e.message || '清除失败', true);
+  }
 }
 
 /** 解除登录节流：清掉该账号的失败记录，顺带清本机 IP 的总计数 */
@@ -1920,6 +1933,7 @@ function bind() {
     if (d.act === 'del') deleteAdminUser(d.id, d.name);
     if (d.act === 'unlock') unlockLogin(d.name);
     if (d.act === 'avatar') changeAvatar(d.id, d.name);
+    if (d.act === 'clearAvatar') clearAvatar(d.id, d.name);
   });
 
   $('foodRows').addEventListener('click', async (e) => {

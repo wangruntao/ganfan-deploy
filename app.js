@@ -1474,7 +1474,7 @@ function syncCodeBar() {
   const btn = $('btnDisableCodes');
   if (!btn) return;
   btn.hidden = n === 0;
-  btn.innerHTML = '<svg aria-hidden="true"><use href="#i-trash"/></svg>作废所选' + (n ? ' (' + n + ')' : '');
+  btn.innerHTML = '<svg aria-hidden="true"><use href="#i-trash"/></svg>作废所选' + (n ? ' (' + n + ')' : '') + '<span class="btn-space"></span>';
 }
 
 async function loadMemberCodes() {

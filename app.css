@@ -442,6 +442,11 @@ h1, h2, h3, p { margin: 0; }
 /* 与左侧图标同宽的隐形占位：flex gap 下左右对称，保证按钮文字落在几何中心（与小程序端同思路） */
 .btn-space { width: 16px; height: 16px; flex: none; }
 
+/* 小号按钮：批量操作条等紧凑场景 */
+.btn-sm { height: 30px; padding: 0 11px; font-size: 12px; gap: 5px; }
+.btn-sm svg { width: 14px; height: 14px; }
+.btn-sm .btn-space { width: 14px; height: 14px; }
+
 /* 主按钮：照搬小程序的品牌渐变 + 暖橙投影，只是缩到桌面尺寸 */
 .btn-primary {
   border: 0;

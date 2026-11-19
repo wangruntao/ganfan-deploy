@@ -31,7 +31,9 @@ const state = {
   code: { page: 1, size: 20, status: '', batch: '' },
   codeSelected: [],
   lastBatch: null,
-  member: { page: 1, size: 20, keyword: '' }
+  member: { page: 1, size: 20, keyword: '' },
+  /** 用户列表：独立分页与搜索（普通用户 + 会员同表） */
+  allu: { page: 1, size: 20, keyword: '' }
 };
 
 /* 口味分布（接入后按 public 菜谱库实时聚合 groupBy taste） */
@@ -250,6 +252,11 @@ const api = {
     const p = o || {};
     return this.call('memberUsers', { page: p.page || 1, size: p.size || 20, keyword: p.keyword || '' });
   },
+
+  users(o) {
+    const p = o || {};
+    return this.call('users', { page: p.page || 1, size: p.size || 20, keyword: p.keyword || '' });
+  },
   memberGrant(openid, plan) { return this.call('memberGrant', { openid: openid, plan: plan }); },
   memberRevoke(openid) { return this.call('memberRevoke', { openid: openid }); }
 };
@@ -302,11 +309,12 @@ const TITLES = {
   feedback: ['反馈', '查看用户对 AI 结果的评价并及时处理'],
   users: ['账号管理', '管理可登录本后台的账号与密码'],
   member: ['会员', '发放兑换码、查看会员用户与手动授予'],
+  allusers: ['用户', '全部注册用户：昵称头像、会员标记与活跃度'],
   security: ['安全面板', '登录封锁现状与异常操作一览'],
   log: ['操作日志', '谁在什么时候改了什么，全部留痕']
 };
 
-const TABS = ['stat', 'foods', 'quota', 'member', 'feedback', 'users', 'security', 'log'];
+const TABS = ['stat', 'foods', 'quota', 'member', 'allusers', 'feedback', 'users', 'security', 'log'];
 
 function switchTab(tab) {
   state.tab = tab;
@@ -324,6 +332,7 @@ function switchTab(tab) {
   if (tab === 'foods') loadFoods();
   if (tab === 'feedback') loadFeedback(state.fbScope);
   if (tab === 'member') syncMemberSub();
+  if (tab === 'allusers') loadAllUsers();
   if (tab === 'users') loadAdminUsers();
   if (tab === 'security') loadSecurity();
   if (tab === 'log') loadAudit();
@@ -1637,6 +1646,82 @@ async function loadMemberUsers() {
   }).join('');
 }
 
+/* ---------------------------------------------------------------- 用户列表（全部注册用户） */
+
+async function loadAllUsers() {
+  const c = state.allu;
+  let r;
+  try {
+    r = await api.users({ page: c.page, size: c.size, keyword: c.keyword });
+  } catch (e) {
+    $('allUserRows').innerHTML = `<tr><td colspan="5" class="empty">
+      <div class="empty-ico"><svg aria-hidden="true"><use href="#i-users"/></svg></div>
+      ${esc(e.message || '用户列表加载失败')}</td></tr>`;
+    return;
+  }
+
+  const list = r.list || [];
+  $('uStat').textContent = '共 ' + (r.total || 0) + ' 位用户';
+
+  if (!list.length) {
+    $('allUserRows').innerHTML = `<tr><td colspan="5" class="empty">
+      <div class="empty-ico"><svg aria-hidden="true"><use href="#i-users"/></svg></div>
+      ${c.keyword ? '没有匹配「' + esc(c.keyword) + '」的用户' : '还没有注册用户：小程序端完成一次登录即建档'}</td></tr>`;
+    renderAllUserPager(0, 1);
+    return;
+  }
+
+  $('allUserRows').innerHTML = list.map((u) => {
+    const memberTag = u.isMember
+      ? '<span class="tag tag-ok"><span class="dot"></span>会员</span>'
+      : '<span class="tag tag-off"><span class="dot"></span>普通</span>';
+    const created = u.createdAt ? fmtTime(u.createdAt) : '—';
+    const seen = u.lastLoginAt ? fmtTime(u.lastLoginAt) : '从未';
+    return `
+      <tr>
+        <td>
+          <div class="cell-food" style="min-width:140px">
+            <div class="mini-av">${u.avatarUrl
+              ? `<img class="mini-av-img" src="${esc(u.avatarUrl)}" alt="">`
+              : esc(String(u.nickname || '微').slice(0, 1))}</div>
+            <div style="min-width:0">
+              <div class="food-name">${esc(u.nickname || '微信用户')}</div>
+            </div>
+          </div>
+        </td>
+        <td class="mono" style="font-size:11px;word-break:break-all">${esc(u.openid)}</td>
+        <td>${memberTag}${u.isMember && u.memberPlan ? '<div class="food-desc" style="margin-top:4px">' + esc(PLAN_LABEL[u.memberPlan] || u.memberPlan) + '</div>' : ''}</td>
+        <td style="font-size:12px">${esc(created)}</td>
+        <td style="font-size:12px">${esc(seen)}</td>
+      </tr>`;
+  }).join('');
+
+  renderAllUserPager(r.total || 0, r.page || c.page);
+}
+
+/** 用户列表分页：与菜谱库同款页码条（首尾 + 当前附近），页码/前后翻页均可点 */
+function renderAllUserPager(total, page) {
+  const pages = Math.max(1, Math.ceil(total / state.allu.size));
+  $('uPagerInfo').textContent = `共 ${total} 位用户 · 第 ${page} / ${pages} 页`;
+  const nums = [];
+  for (let i = 1; i <= pages; i++) {
+    if (i === 1 || i === pages || Math.abs(i - page) <= 1) nums.push(i);
+    else if (nums[nums.length - 1] !== '…') nums.push('…');
+  }
+  $('uPagerBtns').innerHTML =
+    `<button class="pg-btn" id="uPgPrev" ${page <= 1 ? 'disabled' : ''}>上一页</button>` +
+    nums.map((n) => n === '…'
+      ? '<span style="padding:0 4px;color:#C9B9A6">…</span>'
+      : `<button class="pg-btn ${n === page ? 'on' : ''}" data-page="${n}">${n}</button>`).join('') +
+    `<button class="pg-btn" id="uPgNext" ${page >= pages ? 'disabled' : ''}>下一页</button>`;
+
+  $('uPgPrev').addEventListener('click', () => { if (state.allu.page > 1) { state.allu.page--; loadAllUsers(); } });
+  $('uPgNext').addEventListener('click', () => { if (state.allu.page < pages) { state.allu.page++; loadAllUsers(); } });
+  $('uPagerBtns').querySelectorAll('[data-page]').forEach((b) => {
+    b.addEventListener('click', () => { state.allu.page = Number(b.dataset.page); loadAllUsers(); });
+  });
+}
+
 async function grantMember() {
   const openid = $('grantOpenid').value.trim();
   const plan = $('grantPlan').value;
@@ -1846,6 +1931,18 @@ function bind() {
     });
   });
   $('btnGenCodes').addEventListener('click', genCodes);
+
+  // 用户列表：搜索防抖 / 刷新
+  let allUserTimer = null;
+  $('qAllUser').addEventListener('input', () => {
+    clearTimeout(allUserTimer);
+    allUserTimer = setTimeout(() => {
+      state.allu.keyword = $('qAllUser').value.trim();
+      state.allu.page = 1;
+      loadAllUsers();
+    }, 320);
+  });
+  $('btnReloadAllUsers').addEventListener('click', () => { loadAllUsers(); toast('已刷新'); });
   $('codeCount').addEventListener('keydown', (e) => { if (e.key === 'Enter') genCodes(); });
   $('btnReloadCodes').addEventListener('click', () => { loadMemberCodes(); toast('已刷新'); });
   $('btnCopyBatch').addEventListener('click', copyBatch);

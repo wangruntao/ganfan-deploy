@@ -142,6 +142,10 @@
         <svg class="nav-ico" aria-hidden="true"><use href="#i-ticket"/></svg>
         <span>会员</span>
       </button>
+      <button class="nav-item" data-tab="allusers" title="用户">
+        <svg class="nav-ico" aria-hidden="true"><use href="#i-users"/></svg>
+        <span>用户</span>
+      </button>
       <button class="nav-item" data-tab="feedback" title="反馈">
         <svg class="nav-ico" aria-hidden="true"><use href="#i-chat"/></svg>
         <span>反馈</span>
@@ -741,6 +745,47 @@
                 </table>
               </div>
             </div>
+          </div>
+        </section>
+
+        <!-- ============ 用户（全部注册用户） ============ -->
+        <section id="tab-allusers" hidden>
+          <div class="toolbar">
+            <div class="search-box">
+              <svg aria-hidden="true"><use href="#i-search"/></svg>
+              <input class="search" id="qAllUser" placeholder="按 openid 或昵称搜索">
+            </div>
+            <span class="pill" id="uStat">—</span>
+            <div class="toolbar-right">
+              <button class="btn btn-ghost" id="btnReloadAllUsers" title="刷新">
+                <svg aria-hidden="true"><use href="#i-refresh"/></svg>刷新
+              </button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>用户</th>
+                    <th style="width:230px">openid</th>
+                    <th style="width:130px">会员</th>
+                    <th style="width:160px">注册时间</th>
+                    <th style="width:160px">最后登录</th>
+                  </tr>
+                </thead>
+                <tbody id="allUserRows">
+                  <tr><td colspan="5" class="empty">
+                    <div class="empty-ico"><svg aria-hidden="true"><use href="#i-users"/></svg></div>
+                    正在加载用户…
+                  </td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="pager">
+            <span id="uPagerInfo">—</span>
+            <div class="pager-right" id="uPagerBtns"></div>
           </div>
         </section>
 

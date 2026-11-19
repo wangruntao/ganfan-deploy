@@ -459,6 +459,10 @@ h1, h2, h3, p { margin: 0; }
 .btn-danger-ghost { background: transparent; border-color: transparent; color: var(--red); }
 .btn-danger-ghost:hover { background: var(--red-soft); border-color: transparent; }
 
+/* 实心红色危险按钮：用于「作废所选」等不可逆批量操作，视觉上与普通操作区分 */
+.btn-danger { background: var(--red); border-color: var(--red); color: #fff; }
+.btn-danger:hover { background: #F04A38; border-color: #F04A38; }
+
 /* ---------------- 卡片 ---------------- */
 
 .card {

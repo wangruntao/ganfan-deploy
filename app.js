@@ -1619,9 +1619,9 @@ async function loadMemberUsers() {
       <tr>
         <td>
           <div class="cell-food" style="min-width:140px">
-            ${u.avatarUrl
+            <div class="mini-av">${u.avatarUrl
               ? `<img class="mini-av-img" src="${esc(u.avatarUrl)}" alt="">`
-              : `<div class="mini-av">${esc(String(u.nickname || '微').slice(0, 1))}</div>`}
+              : esc(String(u.nickname || '微').slice(0, 1))}</div>
             <div style="min-width:0">
               <div class="food-name">${esc(u.nickname || '微信用户')}</div>
               <div class="food-desc">${esc(PLAN_LABEL[u.member.plan] || u.member.plan || '')}</div>
